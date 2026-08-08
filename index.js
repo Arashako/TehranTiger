@@ -1,27 +1,59 @@
 // ===========================
-// BrandX Professional Script
+// TehranTiger - JavaScript
 // ===========================
 
 // Mobile Menu
-const menuBtn = document.querySelector(".menu-btn");
-const navLinks = document.querySelector(".nav-links");
+document.addEventListener("DOMContentLoaded", function () {
 
-menuBtn.addEventListener("click", () => {
-    navLinks.classList.toggle("active");
+    const menuBtn = document.querySelector(".menu-btn");
+    const navLinks = document.querySelector(".nav-links");
+
+    if (menuBtn && navLinks) {
+
+        menuBtn.addEventListener("click", function () {
+
+            navLinks.classList.toggle("active");
+
+            if (navLinks.classList.contains("active")) {
+                menuBtn.textContent = "×";
+            } else {
+                menuBtn.textContent = "☰";
+            }
+
+        });
+
+        const links = navLinks.querySelectorAll("a");
+
+        links.forEach(function (link) {
+
+            link.addEventListener("click", function () {
+
+                navLinks.classList.remove("active");
+                menuBtn.textContent = "☰";
+
+            });
+
+        });
+
+    }
+
 });
+
 
 // ===========================
 // Sticky Navbar
 // ===========================
 
-const navbar = document.querySelector(".navbar");
+window.addEventListener("scroll", function () {
 
-window.addEventListener("scroll", () => {
+    const navbar = document.querySelector(".navbar");
+
+    if (!navbar) return;
 
     if (window.scrollY > 50) {
 
         navbar.style.padding = "14px 7%";
-        navbar.style.background = "rgba(8,17,31,.90)";
+        navbar.style.background = "rgba(8,17,31,.92)";
         navbar.style.boxShadow = "0 10px 30px rgba(0,0,0,.35)";
 
     } else {
@@ -34,301 +66,283 @@ window.addEventListener("scroll", () => {
 
 });
 
+
 // ===========================
 // Reveal Animation
 // ===========================
 
-const observer = new IntersectionObserver(entries => {
+document.addEventListener("DOMContentLoaded", function () {
 
-    entries.forEach(entry => {
+    const sections = document.querySelectorAll("section");
 
-        if(entry.isIntersecting){
+    if ("IntersectionObserver" in window) {
 
-            entry.target.classList.add("active");
+        const observer = new IntersectionObserver(function (entries) {
 
-        }
+            entries.forEach(function (entry) {
 
-    });
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("active");
+                }
 
-},{
-    threshold:.2
+            });
+
+        }, {
+            threshold: 0.15
+        });
+
+        sections.forEach(function (section) {
+
+            section.classList.add("fade-up");
+            observer.observe(section);
+
+        });
+
+    }
+
 });
 
-document.querySelectorAll("section").forEach(sec=>{
-
-    sec.classList.add("fade-up");
-
-    observer.observe(sec);
-
-});
 
 // ===========================
 // Counter Animation
 // ===========================
 
-const counters = document.querySelectorAll("[data-target]");
+document.addEventListener("DOMContentLoaded", function () {
 
-const counterObserver = new IntersectionObserver(entries=>{
+    const counters = document.querySelectorAll("[data-target]");
 
-entries.forEach(entry=>{
+    if (!("IntersectionObserver" in window)) return;
 
-if(entry.isIntersecting){
+    const counterObserver = new IntersectionObserver(function (entries) {
 
-const counter = entry.target;
+        entries.forEach(function (entry) {
 
-const target = +counter.dataset.target;
+            if (!entry.isIntersecting) return;
 
-let count = 0;
+            const counter = entry.target;
+            const target = Number(counter.dataset.target);
 
-const speed = target/120;
+            let current = 0;
 
-const update = ()=>{
+            const interval = setInterval(function () {
 
-count += speed;
+                current++;
 
-if(count < target){
+                counter.textContent = current;
 
-counter.innerText = Math.floor(count);
+                if (current >= target) {
 
-requestAnimationFrame(update);
+                    clearInterval(interval);
+                    counter.textContent = target + "+";
 
-}else{
+                }
 
-counter.innerText = target+"+";
+            }, 80);
 
-}
+            counterObserver.unobserve(counter);
 
-}
+        });
 
-update();
+    }, {
+        threshold: 0.5
+    });
 
-counterObserver.unobserve(counter);
-
-}
+    counters.forEach(function (counter) {
+        counterObserver.observe(counter);
+    });
 
 });
 
-});
-
-counters.forEach(c=>counterObserver.observe(c));
 
 // ===========================
 // Smooth Scroll
 // ===========================
 
-document.querySelectorAll("a[href^='#']").forEach(link=>{
+document.addEventListener("DOMContentLoaded", function () {
 
-link.addEventListener("click",function(e){
+    const links = document.querySelectorAll('a[href^="#"]');
 
-e.preventDefault();
+    links.forEach(function (link) {
 
-const target=document.querySelector(this.getAttribute("href"));
+        link.addEventListener("click", function (event) {
 
-if(target){
+            const href = link.getAttribute("href");
 
-target.scrollIntoView({
+            if (!href || href === "#") return;
 
-behavior:"smooth"
+            const target = document.querySelector(href);
+
+            if (target) {
+
+                event.preventDefault();
+
+                target.scrollIntoView({
+                    behavior: "smooth"
+                });
+
+            }
+
+        });
+
+    });
 
 });
 
-}
-
-});
-
-});
 
 // ===========================
-// Back To Top Button
+// Back To Top
 // ===========================
 
-const topBtn=document.createElement("button");
+document.addEventListener("DOMContentLoaded", function () {
 
-topBtn.innerHTML="↑";
+    const topBtn = document.createElement("button");
 
-topBtn.className="topBtn";
+    topBtn.textContent = "↑";
+    topBtn.className = "topBtn";
 
-document.body.appendChild(topBtn);
+    document.body.appendChild(topBtn);
 
-topBtn.style.position="fixed";
-topBtn.style.left="25px";
-topBtn.style.bottom="25px";
-topBtn.style.width="55px";
-topBtn.style.height="55px";
-topBtn.style.borderRadius="50%";
-topBtn.style.border="none";
-topBtn.style.cursor="pointer";
-topBtn.style.fontSize="24px";
-topBtn.style.background="#ff8800";
-topBtn.style.color="white";
-topBtn.style.display="none";
-topBtn.style.zIndex="999";
+    topBtn.style.position = "fixed";
+    topBtn.style.left = "25px";
+    topBtn.style.bottom = "25px";
+    topBtn.style.width = "55px";
+    topBtn.style.height = "55px";
+    topBtn.style.borderRadius = "50%";
+    topBtn.style.border = "none";
+    topBtn.style.cursor = "pointer";
+    topBtn.style.fontSize = "24px";
+    topBtn.style.background = "#ff8800";
+    topBtn.style.color = "white";
+    topBtn.style.display = "none";
+    topBtn.style.zIndex = "999";
 
-window.addEventListener("scroll",()=>{
+    window.addEventListener("scroll", function () {
 
-if(window.scrollY>500){
+        if (window.scrollY > 500) {
+            topBtn.style.display = "flex";
+        } else {
+            topBtn.style.display = "none";
+        }
 
-topBtn.style.display="block";
+    });
 
-}else{
+    topBtn.addEventListener("click", function () {
 
-topBtn.style.display="none";
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
 
-}
-
-});
-
-topBtn.onclick=()=>{
-
-window.scrollTo({
-
-top:0,
-
-behavior:"smooth"
+    });
 
 });
 
-};
 
 // ===========================
 // Card Hover Effect
 // ===========================
 
-document.querySelectorAll(".card").forEach(card=>{
+document.addEventListener("DOMContentLoaded", function () {
 
-card.addEventListener("mousemove",(e)=>{
+    const cards = document.querySelectorAll(".card");
 
-const rect=card.getBoundingClientRect();
+    cards.forEach(function (card) {
 
-const x=e.clientX-rect.left;
+        card.addEventListener("mousemove", function (event) {
 
-const y=e.clientY-rect.top;
+            if (window.innerWidth <= 768) return;
 
-card.style.background=`radial-gradient(circle at ${x}px ${y}px,
-rgb(161, 65, 0),
-rgba(255,255,255,.05))`;
+            const rect = card.getBoundingClientRect();
+
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            card.style.background =
+                "radial-gradient(circle at " +
+                x +
+                "px " +
+                y +
+                "px, rgb(161,65,0), rgba(255,255,255,.05))";
+
+        });
+
+        card.addEventListener("mouseleave", function () {
+
+            card.style.background =
+                "rgba(255,255,255,.06)";
+
+        });
+
+    });
 
 });
 
-card.addEventListener("mouseleave",()=>{
-
-card.style.background="rgba(255,255,255,.05)";
-
-});
-
-});
 
 // ===========================
-// Active Menu On Scroll
+// Portfolio Filter
 // ===========================
 
-const sections=document.querySelectorAll("section");
+document.addEventListener("DOMContentLoaded", function () {
 
-const nav=document.querySelectorAll(".nav-links a");
+    const filters = document.querySelectorAll(".filter");
+    const projects = document.querySelectorAll(".project");
 
-window.addEventListener("scroll",()=>{
+    filters.forEach(function (button) {
 
-let current="";
+        button.addEventListener("click", function () {
 
-sections.forEach(sec=>{
+            filters.forEach(function (filter) {
+                filter.classList.remove("active");
+            });
 
-const top=sec.offsetTop-120;
+            button.classList.add("active");
 
-if(pageYOffset>=top){
+            const value = button.dataset.filter;
 
-current=sec.getAttribute("id");
+            projects.forEach(function (project) {
 
-}
+                if (
+                    value === "all" ||
+                    project.classList.contains(value)
+                ) {
+
+                    project.style.display = "block";
+
+                } else {
+
+                    project.style.display = "none";
+
+                }
+
+            });
+
+        });
+
+    });
 
 });
-
-nav.forEach(link=>{
-
-link.classList.remove("active");
-
-if(link.getAttribute("href")==="#"+current){
-
-link.classList.add("active");
-
-}
-
-});
-
-});
-
 // ===========================
 // Preloader
 // ===========================
 
-window.addEventListener("load",()=>{
+window.addEventListener("load", function () {
 
-const loader=document.createElement("div");
+    const preloader = document.getElementById("preloader");
 
-loader.style.position="fixed";
-loader.style.inset="0";
-loader.style.background="#4e2a00";
-loader.style.zIndex="9999";
-loader.style.display="flex";
-loader.style.justifyContent="center";
-loader.style.alignItems="center";
-loader.innerHTML="<h1 style='color:white'>Tehran Tiger</h1>";
+    if (!preloader) {
+        return;
+    }
 
-document.body.appendChild(loader);
+    setTimeout(function () {
 
-setTimeout(()=>{
+        preloader.classList.add("hide");
 
-loader.style.opacity="0";
+        setTimeout(function () {
 
-loader.style.transition=".8s";
+            preloader.remove();
 
-setTimeout(()=>{
+        }, 500);
 
-loader.remove();
-
-},800);
-
-},500);
+    }, 1000);
 
 });
-
-const filters=document.querySelectorAll(".filter");
-
-const projects=document.querySelectorAll(".project");
-
-filters.forEach(btn=>{
-
-btn.onclick=()=>{
-
-filters.forEach(b=>b.classList.remove("active"));
-
-btn.classList.add("active");
-
-const value=btn.dataset.filter;
-
-projects.forEach(card=>{
-
-if(value==="all"){
-
-card.style.display="block";
-
-}else{
-
-card.style.display=
-
-card.classList.contains(value)
-
-?
-
-"block"
-
-:
-
-"none";
-
-}
-
-});
-
-}
-
-}); brandx
